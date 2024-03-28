@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -21,15 +22,15 @@ public class ChatWebServiceModel extends AbstractModel {
 
     private static final String TAG = "ExampleWebServiceModel";
 
-    private static final String GET_URL = "https://testbed.jaysnellen.com:8443/SimpleChat/board";
-    private static final String POST_URL = "https://testbed.jaysnellen.com:8443/SimpleChat/board";
+    private static final String CHAT_URL = "https://testbed.jaysnellen.com:8443/SimpleChat/board";
 
     private MutableLiveData<JSONObject> jsonData;
 
     private String outputText;
+    private String name = "Matthew Hayes";
 
     private final ExecutorService requestThreadExecutor;
-    private final Runnable httpGetRequestThread, httpPostRequestThread;
+    private final Runnable httpGetRequestThread, httpPostRequestThread, httpDeleteRequestThread;
     private Future<?> pending;
 
     public ChatWebServiceModel() {
@@ -48,7 +49,7 @@ public class ChatWebServiceModel extends AbstractModel {
                 /* Begin new request now, but don't wait for it */
 
                 try {
-                    pending = requestThreadExecutor.submit(new HTTPRequestTask("GET", GET_URL));
+                    pending = requestThreadExecutor.submit(new HTTPRequestTask("GET", CHAT_URL));
                 }
                 catch (Exception e) { Log.e(TAG, " Exception: ", e); }
 
@@ -68,7 +69,27 @@ public class ChatWebServiceModel extends AbstractModel {
                 /* Begin new request now, but don't wait for it */
 
                 try {
-                    pending = requestThreadExecutor.submit(new HTTPRequestTask("POST", POST_URL));
+                    pending = requestThreadExecutor.submit(new HTTPRequestTask("POST", CHAT_URL));
+                }
+                catch (Exception e) { Log.e(TAG, " Exception: ", e); }
+
+            }
+
+        };
+
+        httpDeleteRequestThread = new Runnable() {
+
+            @Override
+            public void run() {
+
+                /* If a previous request is still pending, cancel it */
+
+                if (pending != null) { pending.cancel(true); }
+
+                /* Begin new request now, but don't wait for it */
+
+                try {
+                    pending = requestThreadExecutor.submit(new HTTPRequestTask("DELETE", CHAT_URL));
                 }
                 catch (Exception e) { Log.e(TAG, " Exception: ", e); }
 
@@ -78,9 +99,9 @@ public class ChatWebServiceModel extends AbstractModel {
 
     }
 
-    public void initDefault() {
+    public void initDefault() throws JSONException {
 
-        setOutputText("Click the button to send an HTTP GET request ...");
+        sendGetRequest();
 
     }
 
@@ -99,7 +120,7 @@ public class ChatWebServiceModel extends AbstractModel {
 
     }
 
-    // Start GET Request (called from Controller)
+    // Start GET Request (called on startup)
 
     public void sendGetRequest() {
         httpGetRequestThread.run();

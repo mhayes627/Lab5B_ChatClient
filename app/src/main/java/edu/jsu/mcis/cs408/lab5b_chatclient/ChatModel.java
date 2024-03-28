@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class ChatModel extends AbstractModel {
 
-    public static final String TAG = "DefaultModel";
+    public static final String TAG = "ChatModel";
 
     private String outputText;
 

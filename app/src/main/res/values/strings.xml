@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Lab5B_ChatClient</string>
-    <string name="getButton">GET</string>
-    <string name="postButton">POST</string>
+    <string name="postButton">Post</string>
+    <string name="clearButton">Clear</string>
 </resources>
