@@ -3,4 +3,5 @@
     <string name="postButton">POST</string>
     <string name="clearButton">CLEAR</string>
     <string name="input_prompt">Enter a message</string>
+    <string name="app_title">Simple Chat Client</string>
 </resources>
