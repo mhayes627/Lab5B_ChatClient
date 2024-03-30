@@ -12,8 +12,8 @@ public class ChatController extends AbstractController {
         invokeModelMethod("sendGetRequest", null);
     }
 
-    public void sendPostRequest() {
-        invokeModelMethod("sendPostRequest", null);
+    public void sendPostRequest(String input) {
+        invokeModelMethod("sendPostRequest", input);
     }
 
     public void sendDeleteRequest() {invokeModelMethod("sendDeleteRequest", null);}

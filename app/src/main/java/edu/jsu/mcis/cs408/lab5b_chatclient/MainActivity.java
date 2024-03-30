@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.util.Log;
 
-import org.json.JSONException;
-
 import java.beans.PropertyChangeEvent;
 import edu.jsu.mcis.cs408.lab5b_chatclient.databinding.ActivityMainBinding;
 
@@ -39,17 +37,14 @@ public class MainActivity extends AppCompatActivity implements AbstractView {
 
         /* Initialize Model to Default Values */
 
-        try {
-            model.initDefault();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        model.initDefault();
 
 
         binding.postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                controller.sendPostRequest();
+                String input = binding.input.getText().toString();
+                controller.sendPostRequest(input);
             }
         });
 

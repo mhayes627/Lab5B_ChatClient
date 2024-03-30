@@ -20,14 +20,15 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class ChatWebServiceModel extends AbstractModel {
 
-    private static final String TAG = "ExampleWebServiceModel";
+    private static final String TAG = "ChatWebServiceModel";
 
     private static final String CHAT_URL = "https://testbed.jaysnellen.com:8443/SimpleChat/board";
 
     private MutableLiveData<JSONObject> jsonData;
 
     private String outputText;
-    private String name = "Matthew Hayes";
+    private final String name = "Matthew Hayes";
+    private String message;
 
     private final ExecutorService requestThreadExecutor;
     private final Runnable httpGetRequestThread, httpPostRequestThread, httpDeleteRequestThread;
@@ -99,7 +100,7 @@ public class ChatWebServiceModel extends AbstractModel {
 
     }
 
-    public void initDefault() throws JSONException {
+    public void initDefault() {
 
         sendGetRequest();
 
@@ -128,9 +129,13 @@ public class ChatWebServiceModel extends AbstractModel {
 
     // Start POST Request (called from Controller)
 
-    public void sendPostRequest() {
+    public void sendPostRequest(String input) {
+        message = input;
+
         httpPostRequestThread.run();
     }
+
+    public void sendDeleteRequest() { httpDeleteRequestThread.run(); }
 
     // Setter / Getter Methods for JSON LiveData
 
@@ -138,7 +143,11 @@ public class ChatWebServiceModel extends AbstractModel {
 
         this.getJsonData().postValue(json);
 
-        setOutputText(json.toString());
+        try {
+            setOutputText(json.getString("messages"));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -204,9 +213,11 @@ public class ChatWebServiceModel extends AbstractModel {
 
                     conn.setDoOutput(true);
 
-                    // Create request parameters (these will be echoed back by the example API)
-
-                    String p = "name=Jack+Flack&userid=2001";
+                    // Create request parameters
+                    JSONObject j = new JSONObject();
+                    j.put("name", name);
+                    j.put("message", message);
+                    String p = j.toString();
 
                     // Write parameters to request body
 
@@ -238,8 +249,9 @@ public class ChatWebServiceModel extends AbstractModel {
 
                     do {
                         line = reader.readLine();
-                        if (line != null)
+                        if (line != null){
                             r.append(line);
+                    }
                     }
                     while (line != null);
 
