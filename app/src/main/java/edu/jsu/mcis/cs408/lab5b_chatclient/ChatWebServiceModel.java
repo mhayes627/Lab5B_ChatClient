@@ -131,7 +131,6 @@ public class ChatWebServiceModel extends AbstractModel {
 
     public void sendPostRequest(String input) {
         message = input;
-
         httpPostRequestThread.run();
     }
 
@@ -144,7 +143,8 @@ public class ChatWebServiceModel extends AbstractModel {
         this.getJsonData().postValue(json);
 
         try {
-            setOutputText(json.getString("messages"));
+            String output = json.getString("messages");
+            setOutputText(output);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -249,9 +249,8 @@ public class ChatWebServiceModel extends AbstractModel {
 
                     do {
                         line = reader.readLine();
-                        if (line != null){
+                        if (line != null)
                             r.append(line);
-                    }
                     }
                     while (line != null);
 

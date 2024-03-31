@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.util.Log;
-
 import java.beans.PropertyChangeEvent;
+
 import edu.jsu.mcis.cs408.lab5b_chatclient.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements AbstractView {
@@ -14,7 +14,6 @@ public class MainActivity extends AppCompatActivity implements AbstractView {
     public static final String TAG = "MainActivity";
 
     private ActivityMainBinding binding;
-
     private ChatController controller;
 
     @Override
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements AbstractView {
         /* Initialize Model to Default Values */
 
         model.initDefault();
-
 
         binding.postButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,9 +67,8 @@ public class MainActivity extends AppCompatActivity implements AbstractView {
 
             String oldPropertyValue = binding.output.getText().toString();
 
-            if ( !oldPropertyValue.equals(propertyValue) ) {
+            if (!oldPropertyValue.equals(propertyValue))
                 binding.output.setText(propertyValue);
-            }
 
         }
 
